@@ -68,9 +68,6 @@ parameters {
     vector[L] R; // layer resistivities
     vector<lower=10,upper=1500>[L-1] T; // layer thicknesses
     vector<lower=0>[L-1] a; // smoothness
-    //vector<lower=0>[F] b; // errors
-
-    //vector<lower=0>[L-1] Re; //rayleight vars vars
 }
 transformed parameters {
   vector[2] Z; // temporary impedance values
@@ -84,18 +81,11 @@ transformed parameters {
 
 model {
       for (i in 1:F) {
-        // b[i] ~ exponential(1/sigma[i]);
-        // b[i,2] ~ exponential(1/sigma[i]);
         z_o[i,1] ~ normal(z_s[i,1],sigma[i]);
         z_o[i,2] ~ normal(z_s[i,2],sigma[i]);
       }
       for (i in 2:L) {
           R[i] ~ normal(R[i-1],a[i-1]);
-          //T[i-1] ~ normal(Re[i-1],Re[i-1]*0.2);
           a[i-1] ~ exponential(0.5);
-        //   T[i-1] ~ rayleigh(300*1.1^(L-i));
-          //sig[i-1] ~ exponential(300);
       }
-      //a[1] ~ exponential(0.5);
-      //a[L-1] ~ exponential(0.5);
     }
